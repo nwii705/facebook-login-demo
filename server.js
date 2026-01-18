@@ -164,12 +164,35 @@ app.get('/api/users', (req, res) => {
   });
 });
 
+// API: Xóa user theo ID (admin)
+app.delete('/api/users/:id', (req, res) => {
+  const userId = req.params.id;
+
+  db.run('DELETE FROM users WHERE id = ?', [userId], function(err) {
+    if (err) {
+      return res.status(500).json({ error: 'Server error' });
+    }
+
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'User deleted successfully',
+      deletedId: userId
+    });
+  });
+});
+
 // API: Xóa tất cả users (admin)
 app.post('/api/clear-all', (req, res) => {
   db.run('DELETE FROM users', [], function(err) {
     if (err) {
       return res.status(500).json({ error: 'Server error' });
     }
+
+    const deletedCount = this.changes;
 
     // Reset auto-increment
     db.run('DELETE FROM sqlite_sequence WHERE name="users"', [], (err) => {
@@ -178,8 +201,8 @@ app.post('/api/clear-all', (req, res) => {
       }
       res.json({
         success: true,
-        message: `Deleted ${this.changes} users`,
-        deletedCount: this.changes
+        message: `Deleted ${deletedCount} users`,
+        deletedCount: deletedCount
       });
     });
   });
