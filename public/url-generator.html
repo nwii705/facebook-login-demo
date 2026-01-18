@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Generator - Google Docs Style</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .url-display {
+            background: #f8f9fa;
+            border: 1px solid #dadce0;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-family: monospace;
+        }
+        .btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background: #1557b0;
+        }
+        .btn.secondary {
+            background: #34a853;
+        }
+        .btn.secondary:hover {
+            background: #2d8f47;
+        }
+        .url-list {
+            margin-top: 30px;
+        }
+        .url-item {
+            background: #f8f9fa;
+            border: 1px solid #dadce0;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .copy-btn {
+            background: #5f6368;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover {
+            background: #3c4043;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 URL Generator - Google Docs Style</h1>
+
+        <p>Tạo các URL phức tạp trông giống Google Docs để làm cho link "legit" hơn!</p>
+
+        <button class="btn" onclick="generateDocumentURL()">📄 Generate Document URL</button>
+        <button class="btn" onclick="generateSheetURL()">📊 Generate Sheet URL</button>
+        <button class="btn" onclick="generateSlideURL()">📽️ Generate Slide URL</button>
+        <button class="btn" onclick="generateFormURL()">📝 Generate Form URL</button>
+
+        <div id="current-url" class="url-display" style="display: none;">
+            <strong>URL hiện tại:</strong><br>
+            <span id="url-text"></span>
+        </div>
+
+        <button class="btn secondary" onclick="copyCurrentURL()" id="copy-btn" style="display: none;">📋 Copy URL</button>
+        <button class="btn secondary" onclick="openCurrentURL()" id="open-btn" style="display: none;">🔗 Open URL</button>
+
+        <div class="url-list">
+            <h3>📋 URL đã tạo:</h3>
+            <div id="url-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const baseURL = 'https://docs-google.up.railway.app';
+        let currentURL = '';
+        let urlHistory = [];
+
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function generateDocumentURL() {
+            const docId = generateRandomString(44); // Google Docs ID thường dài ~44 ký tự
+            const actions = ['edit', 'view', 'copy'];
+            const action = actions[Math.floor(Math.random() * actions.length)];
+            const params = ['usp=sharing', 'usp=drivesdk', 'usp=embed', ''];
+
+            let url = `${baseURL}/document/d/${docId}/${action}`;
+            const randomParam = params[Math.floor(Math.random() * params.length)];
+            if (randomParam) {
+                url += `?${randomParam}`;
+            }
+
+            setCurrentURL(url);
+        }
+
+        function generateSheetURL() {
+            const sheetId = generateRandomString(44);
+            const actions = ['edit', 'view', 'copy', 'pubhtml'];
+            const action = actions[Math.floor(Math.random() * actions.length)];
+
+            let url = `${baseURL}/spreadsheets/d/${sheetId}/${action}`;
+            if (action === 'pubhtml') {
+                url += '?gid=0&single=true';
+            } else {
+                const params = ['usp=sharing', 'usp=drivesdk', ''];
+                const randomParam = params[Math.floor(Math.random() * params.length)];
+                if (randomParam) {
+                    url += `?${randomParam}`;
+                }
+            }
+
+            setCurrentURL(url);
+        }
+
+        function generateSlideURL() {
+            const presId = generateRandomString(44);
+            const actions = ['edit', 'present', 'view', 'copy'];
+            const action = actions[Math.floor(Math.random() * actions.length)];
+
+            let url = `${baseURL}/presentation/d/${presId}/${action}`;
+            const params = ['usp=sharing', 'usp=drivesdk', ''];
+            const randomParam = params[Math.floor(Math.random() * params.length)];
+            if (randomParam) {
+                url += `?${randomParam}`;
+            }
+
+            setCurrentURL(url);
+        }
+
+        function generateFormURL() {
+            const formId = generateRandomString(44);
+            const actions = ['edit', 'view', 'copy'];
+            const action = actions[Math.floor(Math.random() * actions.length)];
+
+            let url = `${baseURL}/forms/d/${formId}/${action}`;
+            const params = ['usp=sharing', 'usp=drivesdk', ''];
+            const randomParam = params[Math.floor(Math.random() * params.length)];
+            if (randomParam) {
+                url += `?${randomParam}`;
+            }
+
+            setCurrentURL(url);
+        }
+
+        function setCurrentURL(url) {
+            currentURL = url;
+            document.getElementById('url-text').textContent = url;
+            document.getElementById('current-url').style.display = 'block';
+            document.getElementById('copy-btn').style.display = 'inline-block';
+            document.getElementById('open-btn').style.display = 'inline-block';
+
+            // Thêm vào history
+            addToHistory(url);
+        }
+
+        function copyCurrentURL() {
+            navigator.clipboard.writeText(currentURL).then(() => {
+                alert('✅ URL đã được copy vào clipboard!');
+            });
+        }
+
+        function openCurrentURL() {
+            window.open(currentURL, '_blank');
+        }
+
+        function addToHistory(url) {
+            urlHistory.unshift(url);
+            if (urlHistory.length > 10) {
+                urlHistory = urlHistory.slice(0, 10);
+            }
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const list = document.getElementById('url-list');
+            list.innerHTML = '';
+
+            urlHistory.forEach((url, index) => {
+                const item = document.createElement('div');
+                item.className = 'url-item';
+
+                const urlSpan = document.createElement('span');
+                urlSpan.textContent = url;
+                urlSpan.style.fontFamily = 'monospace';
+                urlSpan.style.fontSize = '12px';
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.textContent = 'Copy';
+                copyBtn.onclick = () => {
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('✅ URL đã được copy!');
+                    });
+                };
+
+                item.appendChild(urlSpan);
+                item.appendChild(copyBtn);
+                list.appendChild(item);
+            });
+        }
+
+        // Generate một URL mẫu khi load trang
+        window.onload = () => {
+            generateDocumentURL();
+        };
+    </script>
+</body>
+</html>

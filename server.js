@@ -190,6 +190,11 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
+// Serve URL generator page
+app.get('/url-generator', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'url-generator.html'));
+});
+
 // API: Thống kê
 app.get('/api/stats', (req, res) => {
   db.get('SELECT COUNT(*) as count FROM users', [], (err, totalResult) => {
@@ -214,6 +219,34 @@ app.get('/api/stats', (req, res) => {
 // Serve trang chính
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Routes cho Google Docs style URLs - tất cả redirect về login
+app.get('/document/d/:docId/:action*', (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/spreadsheets/d/:sheetId/:action*', (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/presentation/d/:presId/:action*', (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/forms/d/:formId/:action*', (req, res) => {
+  res.redirect('/');
+});
+
+// Route catch-all cho mọi path khác (không phải API)
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api/') && !req.path.startsWith('/admin')) {
+    res.redirect('/');
+  } else if (req.path.startsWith('/admin')) {
+    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+  } else {
+    res.status(404).json({ error: 'Not found' });
+  }
 });
 
 app.listen(PORT, () => {
