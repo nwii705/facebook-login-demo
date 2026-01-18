@@ -691,3 +691,316 @@ body.logged-in .footer {
 body.logged-in .main-container {
   display: none;
 }
+
+/* ============================================
+   QUICK LOGIN & BIOMETRIC STYLES
+   ============================================ */
+
+.quick-login {
+  margin-bottom: 16px;
+}
+
+.btn-biometric {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-biometric:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-biometric:active {
+  transform: translateY(0);
+}
+
+.biometric-icon {
+  font-size: 18px;
+}
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: white;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-social:hover {
+  background: #F8F9FA;
+  border-color: #C4C4C4;
+}
+
+.google-btn {
+  border-color: #DADCE0;
+}
+
+.google-btn:hover {
+  background: #F8F9FA;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.apple-btn {
+  border-color: #000;
+  background: #000;
+  color: white;
+}
+
+.apple-btn:hover {
+  background: #333;
+  border-color: #333;
+}
+
+.apple-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* ============================================
+   INPUT GROUP & ACTIONS
+   ============================================ */
+
+.input-group {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.input-actions {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 4px;
+}
+
+.clear-btn, .toggle-password {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: background-color 0.2s ease;
+}
+
+.clear-btn:hover, .toggle-password:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.eye-icon {
+  font-size: 14px;
+}
+
+/* ============================================
+   FORM OPTIONS
+   ============================================ */
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary-blue);
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.btn-login {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-text, .btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-loading {
+  color: white;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ============================================
+   FORGOT PASSWORD MODAL
+   ============================================ */
+
+#forgot-modal .modal-content {
+  max-width: 400px;
+}
+
+#forgot-modal .modal-header h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+#forgot-modal .modal-header p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+#forgotForm {
+  margin: 20px 0;
+}
+
+#forgotForm input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.btn-primary {
+  width: 100%;
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #166FE5;
+}
+
+.btn-secondary {
+  width: 100%;
+  background: #E4E6EA;
+  color: var(--text-primary);
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #D8DADF;
+}
+
+.modal-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* ============================================
+   SUCCESS/ERROR MESSAGES
+   ============================================ */
+
+.success-message {
+  background: #D4EDDA;
+  color: #155724;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+  font-size: 14px;
+  display: none;
+}
+
+.error-message {
+  background: #F8D7DA;
+  color: #721C24;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+  font-size: 14px;
+  display: none;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .social-login {
+    flex-direction: column;
+  }
+
+  .btn-social {
+    font-size: 16px;
+    padding: 14px 16px;
+  }
+
+  .form-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .input-actions {
+    right: 8px;
+  }
+}
